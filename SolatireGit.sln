@@ -5,6 +5,11 @@ VisualStudioVersion = 17.5.33502.453
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SolatireGit", "SolatireGit\SolatireGit.vcxproj", "{8576DEAE-BD6D-4AA9-96C2-7103B69BB50E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CE07ABB7-8C2C-4713-B61B-80595EAD7794}"
+	ProjectSection(SolutionItems) = preProject
+		Solitaire.h = Solitaire.h
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
