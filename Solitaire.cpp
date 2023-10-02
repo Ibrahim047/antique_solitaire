@@ -132,4 +132,171 @@ int Solitaire::droped_on(Vector2i pos)
 		}
 	}
 	return -1;
+
+}
+void Solitaire::Move(int droped_on_deck, vector<Card*>& moving) {
+
+	if (found_in_deck == 12) {
+		if (droped_on_deck >= 7) {
+
+			Position pos;
+			pos.x = 1010 + ((195) * (droped_on_deck - 7));
+			pos.y = 63;
+			cout << pos.x << " " << pos.y << endl;
+			moving[0]->setPos(pos);
+
+			Sorted_Pile[droped_on_deck - 7].push(moving[0]);
+			outOfMainDeck.pop();
+			rem--;
+			if (rem == 0 and !outOfMainDeck.isEmpty()) {
+				if (outOfMainDeck.size() < level)
+					rem = outOfMainDeck.size();
+				else
+					rem = level;
+			}
+			score += 10;
+			/*if (!SubDecks[found_in_deck].isEmpty())
+				SubDecks[found_in_deck].top().Flip();*/
+			return;
+		}
+		Vector2f p;
+		if (SubDecks[droped_on_deck].isEmpty()) {
+			p.x = 425 + (195 * droped_on_deck);
+			p.y = 300 - 30;
+		}
+		else
+			p = SubDecks[droped_on_deck].top().img.getPosition();
+		SubDecks[droped_on_deck].push(&outOfMainDeck.top());
+		SubDecks[droped_on_deck].top().img.setPosition(p.x, p.y + (30));
+		outOfMainDeck.pop();
+		rem--;
+		if (rem == 0 and !outOfMainDeck.isEmpty()) {
+			if (outOfMainDeck.size() < level)
+				rem = outOfMainDeck.size();
+			else
+				rem = level;
+		}
+		score += 5;
+		return;
+	}
+
+	if (droped_on_deck >= 7) {
+		Position pos;
+		pos.x = 1010 + ((195) * (droped_on_deck - 7));
+		pos.y = 63;
+		cout << pos.x << " " << pos.y << endl;
+		moving[0]->setPos(pos);
+
+		Sorted_Pile[droped_on_deck - 7].push(moving[0]);
+		SubDecks[found_in_deck].pop();
+		if (!SubDecks[found_in_deck].isEmpty())
+			SubDecks[found_in_deck].top().Flip();
+		score += 10;
+		return;
+	}
+
+
+	StackoCards temp;
+	for (int i = 0; i < moving.size(); i++) {
+		temp.push(&SubDecks[found_in_deck].top());
+		SubDecks[found_in_deck].pop();
+	}
+	if (!SubDecks[found_in_deck].isEmpty())
+		SubDecks[found_in_deck].top().Flip();
+	Vector2f p;
+	if (SubDecks[droped_on_deck].isEmpty()) {
+		p.x = 425 + (195 * droped_on_deck);
+		p.y = 300 - 30;
+	}
+	else
+		p = SubDecks[droped_on_deck].top().img.getPosition();
+	int size = temp.size();
+	for (int i = 0; i < size; i++) {
+		SubDecks[droped_on_deck].push(&temp.top());
+		SubDecks[droped_on_deck].top().img.setPosition(p.x, p.y + (30 * (i + 1)));
+		temp.pop();
+	}
+	score += 5;
+}
+
+void Solitaire::revert(vector<Card*>& moving)
+{/*
+	P.x = 425 + (195 * i);
+	P.y = 300 + (30 * j);*/
+
+	if (found_in_deck == 12) {
+		Card* t;
+		t = &outOfMainDeck.top();
+		outOfMainDeck.pop();
+
+		Vector2f P;
+		if (outOfMainDeck.isEmpty()) {
+			P.x = 268 + (0 * 30);
+			P.y = 63;
+		}
+		else
+			P = outOfMainDeck.top().img.getPosition();
+
+		outOfMainDeck.push(t);
+		//outOfMainDeck.push(moving[0]);
+
+		outOfMainDeck.top().img.setPosition(P.x + 30, P.y);
+		outOfMainDeck.top().setMovement(false);
+
+		return;
+	}
+
+	StackoCards temp;
+	for (int i = 0; i < moving.size(); i++) {
+		temp.push(&SubDecks[found_in_deck].top());
+		SubDecks[found_in_deck].pop();
+	}
+	Vector2f p;
+	if (SubDecks[found_in_deck].isEmpty()) {
+		p.x = 425 + (195 * found_in_deck);
+		p.y = 300 - 30;
+	}
+	else
+		p = SubDecks[found_in_deck].top().img.getPosition();
+	int size = temp.size();
+	for (int i = 0; i < size; i++) {
+		SubDecks[found_in_deck].push(&temp.top());
+		SubDecks[found_in_deck].top().img.setPosition(p.x, p.y + (30 * (i + 1)));
+		temp.pop();
+	}
+}
+
+void Solitaire::undo()
+{
+	if (Ustate.hasData) {
+		Ustate.cameFrom->push(&Ustate.WentTo->top());
+		Ustate.cameFrom->top().setPos(Ustate.prePos);
+		Ustate.WentTo->pop();
+	}
+}
+
+void Solitaire::redo()
+{
+	if (RState.hasData) {
+		RState.cameFrom->push(&Ustate.WentTo->top());
+		RState.cameFrom->top().setPos(Ustate.prePos);
+		RState.WentTo->pop();
+	}
+}
+
+
+bool Solitaire::isValidMove(int n, vector<Card*>& moving)
+{
+	if (n >= 7) {
+		if (Sorted_Pile[n - 7].isEmpty() and moving.size() == 1 and moving[0]->getNO() == 1)
+			return true;
+		if (moving.size() == 1 and Sorted_Pile[n - 7].top().getClr() == moving[0]->getClr() and Sorted_Pile[n - 7].top().getFamily() == moving[0]->getFamily() and Sorted_Pile[n - 7].top().getNO() == moving[0]->getNO() - 1)
+			return true;
+	}
+	if (n != 12 and SubDecks[n].isEmpty() and moving[0]->getNO() == 13)
+		return true;
+	if (n != 12 and SubDecks[n].top().getNO() - 1 == moving[0]->getNO() and SubDecks[n].top().getClr() != moving[0]->getClr())
+		return true;
+
+	return false;
 }
