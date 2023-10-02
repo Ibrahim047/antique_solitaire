@@ -127,8 +127,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+<<<<<<< HEAD
     <ClInclude Include="Stack_o_Cards.h" />
   </ItemGroup>
+=======
+    <ClInclude Include="Card.h" />
+    <ClInclude Include="Stack_o_Cards.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Card.cpp" />
+  </ItemGroup>
+>>>>>>> f9e47ed31934a39b79dfa74a8d1d2a90260728aa
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

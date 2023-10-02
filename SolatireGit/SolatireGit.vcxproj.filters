@@ -18,5 +18,16 @@
     <ClInclude Include="Stack_o_Cards.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+<<<<<<< HEAD
+=======
+    <ClInclude Include="Card.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Card.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+>>>>>>> f9e47ed31934a39b79dfa74a8d1d2a90260728aa
   </ItemGroup>
 </Project>
